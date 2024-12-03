@@ -1,0 +1,17 @@
+drop index if exists idx_orders on v_orders
+go 
+create unique clustered index idx_orders on v_orders(order_id, product_id)
+go 
+drop index if exists idx_v_orders on v_orders
+go 
+
+create COLUMNSTORE index idx_v_orders
+    on v_orders(customer_state, customer_name, order_year, order_id, ship_via, order_detail_qty, order_detail_extd_price, product_id, product_name, product_department)
+go 
+
+select product_name, sum(order_detail_qty)
+    from v_orders  
+    group by product_name
+
+select distinct customer_name, product_department
+    from v_orders
